@@ -111,10 +111,24 @@ https.createServer({
 
 ### Session-management in Express
 + What are sessions?
+> A session can be defined as a server-side storage of information that is desired to persist throughout the user's interaction with the web site or web application. 
+
+
 + What are the different ways of managing sessions in express?
+
+- [express-session](https://github.com/expressjs/session)
+- [client-sessions](https://www.npmjs.com/package/cookie-session)
+- [cookie session](https://github.com/mozilla/node-client-sessions)
+
 + Create a minimal example of how to set up a session (FYI: pseudo code is
   fine)
-
+```js
+- npm i express-session
+- define sessionOptions {secret,saveUninitialized,cookie}
+- app.use(express-session(sessionOptions))
+- using req.session in adding variables and data as you want
+- the server will use connected.sid from cookies "internally"
+```
 ### Attacks
 + What are the following types of attack?
   + Man In The Middle (MITM)
