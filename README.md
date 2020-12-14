@@ -130,8 +130,86 @@ https.createServer({
 - the server will use connected.sid from cookies "internally"
 ```
 ### Attacks
-+ What are the following types of attack?
++ What are the following types of attack and How can you defend against each of them?
   + Man In The Middle (MITM)
+> - A man in the middle (MITM) attack is a general term for when a perpetrator positions himself in a conversation between a user and an application—either to eavesdrop or to impersonate one of the parties, making it appear as if a normal exchange of information is underway.
+
+> - The goal of an attack is to steal personal information, such as login credentials, account details and credit card numbers. Targets are typically the users of financial applications, SaaS businesses, e-commerce sites and other websites where logging in is required.
+
+![Man In The Middle (MITM) attack image](https://www.imperva.com/learn/wp-content/uploads/sites/13/2017/09/man-in-the-middle-mitm-attack.png)
+
+#### 7 types of man-in-the-middle attacks
+- IP spoofing
+- DNS spoofing
+- HTTPS spoofing
+- SSL hijacking
+- Email hijacking
+- Wi-Fi eavesdropping
+- Stealing browser cookies
+
+#### Avoid MITM Attack :-
+- Avoiding WiFi connections that aren’t password protected.
+- Paying attention to browser notifications reporting a website as being unsecured.
+- Immediately logging out of a secure application when it’s not in use.
+- Not using public networks (e.g., coffee shops, hotels) when conducting sensitive transactions.
+
+- For website operators, secure communication protocols, including TLS and HTTPS and use SSL/TLS to secure every page of their site and not just the pages that require users to log in
+
   + Cross Site Scripting (XSS)
+> Cross-site Scripting (XSS) is a client-side code injection attack.
+
+> Cross-site scripting (also known as XSS) is a web security vulnerability that allows an attacker to compromise the interactions that users have with a vulnerable application. It allows an attacker to circumvent the same origin policy, which is designed to segregate different websites from each other. Cross-site scripting vulnerabilities normally allow an attacker to masquerade as a victim user, to carry out any actions that the user is able to perform, and to access any of the user's data. If the victim user has privileged access within the application, then the attacker might be able to gain full control over all of the application's functionality and data.
+
+> The attacker aims to execute malicious scripts in a web browser of the victim by including malicious code in a legitimate web page or web application
+
+#### Cross Site Scripting descriptive images:-
+
+![Cross Site Scripting image](https://www.acunetix.com/wp-content/uploads/2012/10/how-xss-works-910x404.png)
+
+
+![Cross Site Scripting image](https://portswigger.net/web-security/images/cross-site-scripting.svg)
+
+#### Cross Site Scripting Types
+- **Reflected XSS** : where the malicious script comes from the current HTTP request.
+- **Stored XSS** : where the malicious script comes from the website's database.
+- **DOM-based XSS** : where the vulnerability exists in client-side code rather than server-side code.
+
+#### How to prevent XSS attacks
+
+- **Filter input on arrival** : At the point where user input is received, filter as strictly as possible based on what is expected or valid input.
+- **Encode data on output** : At the point where user-controllable data is output in HTTP responses, encode the output to prevent it from being interpreted as active content. Depending on the output context, this might require applying combinations of HTML, URL, JavaScript, and CSS encoding.
+- **Use appropriate response headers**: To prevent XSS in HTTP responses that aren't intended to contain any HTML or JavaScript, you can use the Content-Type and X-Content-Type-Options headers to ensure that browsers interpret the responses in the way you intend.
+- **Content Security Policy**: As a last line of defense, you can use Content Security Policy (CSP) to reduce the severity of any XSS vulnerabilities that still occur.
   + Cross Site Request Forgery (CSRF)
-+ How can you defend against each of them?
+
+> **Cross-Site Request Forgery (CSRF)** is an attack that forces an end user to execute unwanted actions on a web application in which they’re currently authenticated. With a little help of social engineering (such as sending a link via email or chat), an attacker may trick the users of a web application into executing actions of the attacker’s choosing. If the victim is a normal user, a successful CSRF attack can force the user to perform state changing requests like transferring funds, changing their email address, and so forth. If the victim is an administrative account, CSRF can compromise the entire web application.
+#### Cross-Site Request Forgery (CSRF) image:-
+![Cross-Site Request Forgery (CSRF) image](https://portswigger.net/web-security/images/cross-site%20request%20forgery.svg)
+
+![Cross-Site Request Forgery (CSRF) image](https://www.imperva.com/learn/wp-content/uploads/sites/13/2019/01/csrf-cross-site-request-forgery.png)
+
+#### Best practices to avoid CSRF:
+
+- Logging off web applications when not in use
+- Securing usernames and passwords
+- Not allowing browsers to remember passwords
+- Avoiding simultaneously browsing while logged into an application
+
+> For web applications, multiple solutions exist to block malicious traffic and prevent attacks. Among the most common mitigation methods is to generate unique random tokens for every session request or ID. These are subsequently checked and verified by the server. Session requests having either duplicate tokens or missing values are blocked. Alternatively, a request that doesn’t match its session ID token is prevented from reaching an application.
+
+> Double submission of cookies is another well-known method to block CSRF. Similar to using unique tokens, random tokens are assigned to both a cookie and a request parameter. The server then verifies that the tokens match before granting access to the application.
+
+> While effective, tokens can be exposed at a number of points, including in browser history, HTTP log files, network appliances logging the first line of an HTTP request and referrer headers, if the protected site links to an external URL. These potential weak spots make tokens a less than full-proof solution.
+
+
+#### Explain CSRF Token 
+
+> To defeat a CSRF attack, applications need a way to determine if the HTTP request is legitimately generated via the application’s user interface. The best way to achieve this is through a CSRF token. A CSRF token is a secure random token (e.g., synchronizer token or challenge token) that is used to prevent CSRF attacks. The token needs to be unique per user session and should be of large random value to make it difficult to guess.
+
+> A CSRF secure application assigns a unique CSRF token for every user session. These tokens are inserted within hidden parameters of HTML forms related to critical server-side operations. They are then sent to client browsers.
+
+> It is the application team’s responsibility to identify which server-side operations are sensitive in nature. The CSRF tokens must be a part of the HTML form—not stored in session cookies. The easiest way to add a non-predictable parameter is to use a secure hash function (e.g., SHA-2) to hash the user’s session ID. To ensure randomness, the tokens must be generated by a cryptographically secure random number generator.
+
+> Whenever a user invokes these critical operations, a request generated by the browser must include the associated CSRF token. This will be used by the application server to verify the legitimacy of the end-user request. The application server rejects the request if the CSRF token fails to match the test.
+
+#### [How to set CSRF Token at express !](https://levelup.gitconnected.com/how-to-implement-csrf-tokens-in-express-f867c9e95af0)
