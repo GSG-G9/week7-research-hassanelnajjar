@@ -60,8 +60,54 @@ https.createServer({
 
 ### Stateless vs stateful authentication
 + What is session based authentication (stateful) vs token based authentication (stateless)?
+
+> - Stateful: You can revoke the authentication session on the IdP anytime.
+> - Stateless: The session expiration time is set when the authentication token is released. You cannot revoke the session on the IdP.
+#### Stateful session 
+> - Stateful session is created on the backend side, and the corespondent session reference Id is sent to the client. Each time the client makes a request to the server, the server locates the session memory using the reference Id from the client and finds the authentication information.
+
+#### Stateless sessions
+> - Stateless authentication is used to solve the disadvantages of stateful authentication. They are quite different and are used in different scenarios.
+
+
 + Draw flow diagrams to show the steps involved in each process
+#### Stateful session diagrams
+![Stateful session diagrams](https://miro.medium.com/max/579/1*B6NRLiXwOn64YSnfpKuQjw.png)
+
+
+#### Stateless session diagrams
+![Stateless session diagrams](https://miro.medium.com/max/577/1*bPI6orOxLsgz4Ue18dxmFw.png)
+
 + What are the advantages and disadvantages of each?
+
+#### Stateful session 
+> Advantages
+- Revoke the session anytime
+- Easy to implement and manage for one-session-sever scenario
+- Session data can be changed later (assume that for a one-session-sever, no inconsistent problem)
+
+> Disadvantages
+- Increasing server overhead: As the number of logged-in users increases, the more server resources are occupied.
+- Fail to scale: If the sessions are distributed in different servers, we need to implement a tracking algorithm to link a specific user session and the specific session sever. 
+- Difficult for 3rd party applications to use your credentials
+
+#### Stateless session 
+> Advantages
+- Lower server overhead
+- Easy to scale
+- Good to integrate with 3rd party application
+> Disadvantages
+- Cannot revoke the session anytime
+- Relatively complex to implement for one-session-server scenario
+- Session data cannot be changed until its expiration time
+
+#### Improved stateless authentication: sliding session
+- Assign clients the permission (send the clients a unique refresh token) to request an extension lifetime of session data.
+- Set the expiration time of user data to 24 hours (instead of one month).
+- Each time the session data is expired, the client issues a request (attached with a valid refresh token) to the server to renew the session data.
+
+> With this improvement, we can have the scalability and performance advantages of stateless authentication. Though we still cannot revoke the session data immediately, while we can forbid its lifetime extension by revoking the refresh token.
+
 
 ### Session-management in Express
 + What are sessions?
